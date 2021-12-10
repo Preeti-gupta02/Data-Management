@@ -6,3 +6,6 @@ Building an Entity- Relationship Diagram for a hotel reservation system with hot
 Assignment 2: <br/>
 Creating a fully functioning DDL script that could be run to create a
 demo of the above built Hotel Reservation System database. Building a basic DML script on top of this newly created database to SELECT based on different WHERE clause.
+
+ASsignment 3 : <br/>
+SQL Practice : Joins and multi-table SELECT problems. Summary Problems. Subquery Problem. DataTypes & Function Problems.

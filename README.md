@@ -9,3 +9,8 @@ demo of the above built Hotel Reservation System database. Building a basic DML 
 
 ASsignment 3 : <br/>
 SQL Practice : Joins and multi-table SELECT problems. Summary Problems. Subquery Problem. DataTypes & Function Problems.
+
+Data Lake Certification <br/>
+
+Final Project: <br/>
+Design and implement an integrated data management architecture for a healthcare Company- Dell Seton Medical Center near UT Austin!!

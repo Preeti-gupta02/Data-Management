@@ -1,0 +1,220 @@
+﻿--DDL for the Patient Medical Care Management (Edited and Runs)
+rollback;
+commit;
+-- DDL for Patient Medical Care Management Application
+--Drop Sequences
+DROP SEQUENCE patient_id_seq;
+DROP SEQUENCE insurance_provider_id_seq;
+DROP SEQUENCE medical_record_id_seq;
+DROP SEQUENCE room_id_seq;
+DROP SEQUENCE doctor_id_seq;
+DROP SEQUENCE bill_id_seq;
+DROP SEQUENCE visit_id_seq;
+DROP SEQUENCE bill_details_id_seq;
+DROP SEQUENCE insurance_details_id_seq;
+
+
+--Drop Tables
+DROP TABLE Insurance_Details; 
+DROP TABLE Insurance_Providers;
+DROP TABLE Bill_Details;
+DROP TABLE Visits;
+DROP TABLE Bills;
+DROP TABLE Rooms;
+DROP TABLE Patients;
+DROP TABLE Doctors;
+DROP TABLE Medical_Records;
+
+
+
+
+--Create Sequences
+CREATE SEQUENCE patient_id_seq;
+CREATE SEQUENCE insurance_provider_id_seq;
+CREATE SEQUENCE insurance_details_id_seq;
+CREATE SEQUENCE medical_record_id_seq;
+CREATE SEQUENCE room_id_seq;
+CREATE SEQUENCE doctor_id_seq;
+CREATE SEQUENCE bill_id_seq;
+CREATE SEQUENCE visit_id_seq;
+CREATE SEQUENCE bill_details_id_seq;
+ 
+--Create Tables
+CREATE TABLE Medical_Records (
+    Medical_Record_ID NUMBER DEFAULT medical_record_id_seq.NEXTVAL PRIMARY KEY,
+    EMR_ID VARCHAR(12) NOT NULL UNIQUE
+);
+ 
+CREATE TABLE Patients (
+    Patient_ID NUMBER DEFAULT patient_id_seq.NEXTVAL PRIMARY KEY,
+    Medical_Record_ID NUMBER REFERENCES Medical_Records (Medical_Record_ID),
+    First_Name VARCHAR(20) NOT NULL,
+    Last_Name VARCHAR(30) NOT NULL,
+    Email VARCHAR (40) NOT NULL UNIQUE,
+    Phone CHAR(12) NOT NULL,
+    Street_Address VARCHAR(50) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    State CHAR(20) NOT NULL,
+    Zip CHAR(5) NOT NULL,
+    Birthdate DATE
+);
+ 
+CREATE TABLE Insurance_Providers (
+    Insurance_ID NUMBER DEFAULT insurance_provider_id_seq.NEXTVAL PRIMARY KEY,
+    Provider_Name CHAR(40) NOT NULL,
+    Provider_Phone_Number NUMBER(12) NOT NULL
+);
+ 
+CREATE TABLE Insurance_Details (
+    Insurance_Details_ID NUMBER DEFAULT insurance_details_id_seq.NEXTVAL PRIMARY KEY,
+    Insurance_ID NUMBER REFERENCES Insurance_Providers (Insurance_ID),
+    Patient_ID NUMBER REFERENCES Patients (Patient_ID),
+    Group_Number NUMBER (7) NOT NULL,
+    Coverage_Date DATE NOT NULL,
+    Identification_Number VARCHAR(12) NOT NULL,
+    First_Name CHAR (20) NOT NULL,
+    Last_Name CHAR (20) NOT NULL
+);
+ 
+CREATE TABLE Bills (
+    Bill_ID NUMBER DEFAULT bill_id_seq.NEXTVAL PRIMARY KEY,
+    Bill_Total NUMBER NOT NULL,
+    last_name CHAR (20) NOT NULL,
+    Bill_Status CHAR(2) NOT NULL,
+    Bill_Issued_Date DATE NOT NULL,
+    Bill_Notes VARCHAR(100),
+    CONSTRAINT bill_status_ck CHECK (Bill_Status = 'P' OR Bill_Status = 'NP' OR Bill_Status ='V')
+);
+ 
+CREATE TABLE Bill_Details (
+    Bill_Details_ID NUMBER DEFAULT bill_details_id_seq.NEXTVAL PRIMARY KEY,
+    Patient_ID NUMBER REFERENCES Patients (Patient_ID),
+    Bill_ID NUMBER REFERENCES Bills (Bill_ID)
+);
+ 
+CREATE TABLE Rooms (
+    Room_ID NUMBER DEFAULT room_id_seq.NEXTVAL PRIMARY KEY,
+    Room_Number NUMBER NOT NULL,
+    Room_Floor NUMBER NOT NULL
+);
+ 
+CREATE TABLE Doctors (
+    Doctor_ID NUMBER DEFAULT doctor_id_seq.NEXTVAL PRIMARY KEY,
+    First_Name CHAR (20) NOT NULL,
+    Last_Name CHAR (20) NOT NULL,
+    Specialty CHAR(50) NOT NULL
+);
+ 
+CREATE TABLE Visits (
+    Visit_ID NUMBER DEFAULT visit_id_seq.NEXTVAL PRIMARY KEY,
+    Patient_ID NUMBER REFERENCES  Patients (Patient_ID),
+    Bill_ID NUMBER REFERENCES Bills (Bill_ID),
+    Doctor_ID NUMBER REFERENCES Doctors (Doctor_ID),
+    Room_ID NUMBER REFERENCES Rooms (Room_ID),
+    Reason VARCHAR(200) NOT NULL,
+    Diagnosis VARCHAR(150) NOT NULL,
+    Follow_Up_Date DATE
+);
+
+
+--Insert Statements
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (1, 'pSvbK5X');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (2, 'zSvMEpU8k4x8');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (3, 'yGKDaF');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (4, 'IXzN2cvU');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (5, 'r1BgwUZ1oFK');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (6, 'wOuUUuTdG0e');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (7, 'Q8IehBjbrQtq');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (8, 'enc24o');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (9, '4quQFo');
+insert into Medical_Records (Medical_Record_ID, EMR_ID) values (10, 'kAnSlFLHAh');
+
+
+ 
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (1, 1, 'Sonny', 'Dracksford', 'sdracksford0@nasa.gov', '2021724077', '52 Kim Park', 'Washington', 'District of Columbia', '20073', '19-Jul-2008');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (2, 2, 'Harlen', 'Kiellor', 'hkiellor1@mashable.com', '9415184795', '5 Upham Alley', 'Bradenton', 'Florida', '34282', '12-Mar-2012');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (3, 3, 'Grace', 'Kmicicki', 'gkmicicki2@clickbank.net', '3021898195', '829 Little Fleur Terrace', 'Wilmington', 'Delaware', '19810', '12-Sep-2002');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (4, 4, 'Rhianna', 'Laux', 'rlaux3@drupal.org', '5033524166', '228 Troy Pass', 'Salem', 'Oregon', '97306', '16-Nov-2001');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (5, 5, 'Edi', 'Cinelli', 'ecinelli4@ning.com', '6177235093', '8013 Acker Park', 'Cambridge', 'Massachusetts', '02142', '22-Aug-2005');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (6, 6, 'Rasia', 'Frisch', 'rfrisch5@prnewswire.com', '4075356904', '2 Cody Street', 'Orlando', 'Florida', '32813', '06-May-2006');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (7, 7, 'Petr', 'Casari', 'pcasari6@cmu.edu', '7121708144', '2 Johnson Center', 'Sioux City', 'Iowa', '51105', '15-Jan-1997');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (8, 8, 'Merola', 'Ricards', 'mricards7@cargocollective.com', '4028521750', '59781 Grayhawk Alley', 'Lincoln', 'Nebraska', '68517', '09-Mar-2014');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (9, 9, 'Valentin', 'Paulucci', 'vpaulucci8@weibo.com', '2815169207', '639 Golf Course Junction', 'Houston', 'Texas', '77050', '04-Feb-2010');
+insert into Patients (Patient_ID, Medical_Record_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (10, 10, 'Giralda', 'Benez', 'gbenez9@bloglines.com', '5854217793', '68 Russell Way', 'Rochester', 'New York', '14609', '10-Feb-2008');
+ 
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (1, 'Casper-Lemke', '2694952681');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (2, 'Durgan, Grant and Schulist', '2434642404');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (3, 'Pfeffer Inc', '8147465916');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (4, 'Lindgren Inc', '2837467320');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (5, 'Bergstrom, Schinner and Emard', '2715423059');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (6, 'Ferry, Goldner and Fadel', '3601212264');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (7, 'Pagac Group', '3692600773');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (8, 'Rippin, Will and Carroll', '3736998675');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (9, 'Mosciski-Stiedemann', '3061992817');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (10, 'Leuschke LLC', '8455990029');
+ 
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (1, 1, 1, 1415442, '12-Jun-2018', 'VQjfIHKZGaJ', 'Gertrude', 'Deek');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (2, 2, 2, 1986721, '13-Sep-2019', 'ncVuyMEy', 'Dante', 'Eydel');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (3, 3, 3, 1343412, '19-May-2022', 'KEvi46lIU9', 'Lindsey', 'Towler');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (4, 4, 4, 1133842, '01-Jul-2020', 'dp2a5Rcyo', 'Tommie', 'Touret');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (5, 5, 5, 1187626, '23-Apr-2011', 'POAyxaCI', 'Annadiane', 'Mityakov');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (6, 6, 6, 1421703, '03-Aug-2018', 'c20YEjtX', 'Mommy', 'Dullaghan');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (7, 7, 7, 1342114, '28-Jan-2015', 'i6zNh681SVia', 'Brad', 'Iffland');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (8, 8, 8, 1525102, '21-Jul-2022', 'kGapEg', 'Vivianna', 'Carr');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (9, 9, 9, 1084080, '29-Oct-2015', 'ISkp4jxq', 'Maximilian', 'Shrieve');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (10, 10, 10, 1701087, '29-Nov-2014', 'lJeYzKVq', 'Dominique', 'Burdin');
+ 
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (1, 7273.31, 'Atwater', 'P', '23-Feb-2021', null);
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (2, 9174.26, 'De Ferrari', 'V', '03-May-2021', null);
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (3, 8278.68, 'Birchwood', 'V', '31-Jan-2020', null);
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (4, 1284.18, 'Banks', 'P', '23-Jul-2021', null);
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (5, 6191.69, 'Gabbott', 'NP', '25-Jan-2020', 'Waiting on insurance.');
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (6, 8196.13, 'Pottell', 'V', '04-Sep-2021', 'Bounced check. Contact patient.');
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (7, 768.08, 'Johnikin', 'V', '14-Apr-2021', null);
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (8, 3721.27, 'Semour', 'NP', '04-Jun-2020', null);
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (9, 509.5, 'Moules', 'NP', '29-Sep-2021', null);
+insert into Bills (Bill_ID, Bill_Total, last_name, Bill_Status, Bill_Issued_Date, Bill_Notes) values (10, 8854.89, 'Clethro', 'P', '10-Jul-2021', 'Waiting on insurance.');
+ 
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (1, 1, 1);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (2, 2, 2);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (3, 3, 3);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (4, 4, 4);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (5, 5, 5);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (6, 6, 6);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (7, 7, 7);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (8, 8, 8);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (9, 9, 9);
+insert into Bill_Details (Bill_Details_ID, Patient_ID, Bill_ID) values (10, 10, 10);
+ 
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (1, 300, 3);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (2, 387, 3);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (3, 397, 3);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (4, 255, 2);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (5, 149, 1);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (6, 403, 4);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (7, 291, 2);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (8, 175, 1);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (9, 498, 4);
+insert into Rooms (Room_ID, Room_Number, Room_Floor) values (10, 316, 3);
+ 
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (1, 'Dorree', 'Govern', 'Allergy and immunology');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (2, 'Porty', 'Hallgate', 'Anesthesiology');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (3, 'Antonius', 'Liquorish', 'Emergency medicine');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (4, 'Jenny', 'Crommett', 'Family medicine');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (5, 'Minny', 'D''orsay', 'Family medicine');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (6, 'Ashien', 'Burgen', 'Emergency medicine');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (7, 'Bjorn', 'Charge', 'Family medicine');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (8, 'Niko', 'Pilkinton', 'Anesthesiology');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (9, 'Dimitri', 'Flott', 'Emergency medicine');
+insert into Doctors (Doctor_ID, First_Name, Last_Name, Specialty) values (10, 'Adolph', 'Markussen', 'Emergency medicine');
+ 
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (1, 1, 1, 1, 1, 'Quisque porta volutpat erat.', 'Proin risus.', '03-Dec-2021');
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (2, 2, 2, 2, 2, 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.', null);
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (3, 3, 3, 3, 3, 'Phasellus id sapien in sapien iaculis congue.', 'Proin eu mi.', null);
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (4, 4, 4, 4, 4, 'Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 'Praesent blandit lacinia erat.', null);
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (5, 5, 5, 5, 5, 'Aenean fermentum. Donec ut mauris eget massa tempor convallis.', 'Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.', null);
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (6, 6, 6, 6, 6, 'Ut at dolor quis odio consequat varius. Integer ac leo.', 'Curabitur at ipsum ac tellus semper interdum.', '14-Nov-2021');
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (7, 7, 7, 7, 7, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus.', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', '13-Nov-2021');
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (8, 8, 8, 8, 8, 'Mauris lacinia sapien quis libero.', 'Nullam molestie nibh in lectus.', '16-Nov-2021');
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (9, 9, 9, 9, 9, 'Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.', 'Aenean sit amet justo.', null);
+insert into Visits (Visit_ID, Patient_ID, Bill_ID, Doctor_ID, Room_ID, Reason, Diagnosis, Follow_Up_Date) values (10, 10, 10, 10, 10, 'Morbi vel lectus in quam fringilla rhoncus.', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.', '15-Nov-2021');

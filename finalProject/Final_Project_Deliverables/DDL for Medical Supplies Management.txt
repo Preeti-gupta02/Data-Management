@@ -1,0 +1,129 @@
+﻿--DDL for Medical Supplies Management (Edited and Runs):
+-- DDL for Medical Supplies Management App
+rollback;
+commit;
+
+
+DROP SEQUENCE invoice_id_seq;
+DROP SEQUENCE department_id_seq;
+DROP SEQUENCE supplier_id_seq;
+DROP SEQUENCE invoice_details_id_seq;
+DROP SEQUENCE product_id_seq;
+ 
+DROP TABLE Invoice_Details;
+DROP TABLE Products;
+DROP TABLE Invoices;
+DROP TABLE Suppliers;
+DROP TABLE Departments;
+ 
+CREATE SEQUENCE invoice_id_seq;
+CREATE SEQUENCE department_id_seq;
+CREATE SEQUENCE supplier_id_seq;
+CREATE SEQUENCE invoice_details_id_seq;
+CREATE SEQUENCE product_id_seq;
+ 
+CREATE TABLE Suppliers (
+    Supplier_ID NUMBER DEFAULT supplier_id_seq.NEXTVAL PRIMARY KEY,
+    Supplier_Name CHAR(25) NOT NULL,
+    Street_Address VARCHAR(50) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    State CHAR(30) NOT NULL,
+    Zip CHAR(5) NOT NULL,
+    Phone CHAR(12) NOT NULL,
+    Supplier_Contact_Email CHAR(25) NOT NULL
+);
+ 
+CREATE TABLE Departments (
+    Department_ID NUMBER DEFAULT department_id_seq.NEXTVAL PRIMARY KEY,
+    Department_Name CHAR(25) NOT NULL
+);
+ 
+CREATE TABLE Products (
+    Product_ID NUMBER DEFAULT product_id_seq.NEXTVAL PRIMARY KEY,
+    Supplier_ID NUMBER REFERENCES Suppliers (Supplier_ID),
+    Product_Name VARCHAR(25) NOT NULL,
+    Inventory_Quantity NUMBER NOT NULL
+);
+ 
+CREATE TABLE Invoices (
+    Invoice_ID NUMBER default invoice_id_seq.NEXTVAL PRIMARY KEY,
+    Supplier_ID NUMBER REFERENCES Suppliers (Supplier_ID),
+    Department_ID NUMBER REFERENCES Departments (Department_ID),
+    Total NUMBER NOT NULL,
+    Received_Date DATE NOT NULL,
+    Due_Date DATE NOT NULL,
+    Invoice_Status CHAR(2) NOT NULL,
+    CONSTRAINT invoice_status_ck CHECK (Invoice_Status = 'P' OR Invoice_Status = 'NP' OR Invoice_Status ='V')
+);
+ 
+CREATE TABLE Invoice_Details (
+    Invoice_Details_ID NUMBER DEFAULT invoice_details_id_seq.NEXTVAL PRIMARY KEY,
+    Invoice_ID NUMBER REFERENCES Invoices (Invoice_ID),
+    Product_ID NUMBER REFERENCES Products (Product_ID)
+);
+
+
+--Insert Statements 
+--Insert to Supplier
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (1, 'Johnson and Sons', '32862 Scofield Circle', 'West Palm Beach', 'Florida', '33411', '9543319181', 'aabbey0@xinhuanet.com');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (2, 'Beer, Lemke and Kuvalis','1618 Cold Springs', 'Anchorage', 'Alaska', '99512', '9074355475', 'lkochel1@wikia.com');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (3, 'Spencer-Deckow', '40 Arkansas Street', 'Shawnee Mission', 'Kansas', '66220', '9138014008', 'kspringham2@prweb.com');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (4, 'Windler, Johnson and Fay', '15 Anzinger Court', 'Arlington', 'Texas', '76004', '8179971553', 'wgigg3@yelp.com');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (5, 'D''Amore LLC', '7 Pearson Crossing', 'Sacramento', 'California', '94291', '9169616536', 'bwace4@weather.com');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (6, 'Lemke-Rath', '26163 Carpenter Terrace', 'Tallahassee', 'Florida', '32304', '8507328223', 'kfrissell5@ftc.gov');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (7, 'Wyman and Sons', '2 Canary Court', 'Milwaukee', 'Wisconsin', '53285', '4147829499', 'carni6@infoseek.co.jp');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (8, 'Reichel-Price', '851 Sheridan Street', 'Washington', 'District of Columbia', '20231', '2028343896', 'fperot7@columbia.edu');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (9, 'Langosh-Thompson', '246 Bellgrove Point', 'Erie', 'Pennsylvania', '16505', '8149531771', 'dbestall8@shinystat.com');
+insert into Suppliers (Supplier_ID, Supplier_Name, Street_Address, City, State, Zip, Phone, Supplier_Contact_Email) values (10, 'Kunde, Stracke and Raynor', '6865 Acker Court', 'Pompano Beach', 'Florida', '33075', '7544536952', 'sobbard9@spotify.com');
+
+
+--Insert into Departments
+insert into Departments (Department_ID, Department_Name) values (1, 'Emergency');
+insert into Departments (Department_ID, Department_Name) values (2, 'Cardiology');
+insert into Departments (Department_ID, Department_Name) values (3, 'Intensive care unit (ICU)');
+insert into Departments (Department_ID, Department_Name) values (4, 'Neurology');
+insert into Departments (Department_ID, Department_Name) values (5, 'Radiology');
+insert into Departments (Department_ID, Department_Name) values (6, 'Radiology');
+insert into Departments (Department_ID, Department_Name) values (7, 'Emergency');
+insert into Departments (Department_ID, Department_Name) values (8, 'Cardiology');
+insert into Departments (Department_ID, Department_Name) values (9, 'Emergency');
+insert into Departments (Department_ID, Department_Name) values (10, 'Cardiology');
+
+
+--Insert into Products
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (1, 1, 'N-95 Masks', 6124);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (2, 2, 'Gloves', 9498);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (3, 3, 'Paper Towels', 1334);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (4, 4, 'Syringe', 2929);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (5, 5, 'EKG', 10);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (6, 6, 'Respirator', 990);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (7, 7, 'Stretcher', 182);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (8, 8, 'Glucose Meter', 46);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (9, 9, 'Oxyger Tank', 214);
+insert into Products (Product_ID, Supplier_ID, Product_Name, Inventory_Quantity) values (10, 10, 'Infusion Pump', 58);
+
+
+--Insert into Invoices
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (1, 1, 1, 1452.48, '17-Dec-2020', '14-Sep-2022', 'P');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (2, 2, 2, 7722.04, '16-Jun-2021', '24-Feb-2022', 'NP');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (3, 3, 3, 3678.29, '17-Sep-2021', '25-Sep-2022', 'NP');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (4, 4, 4, 8551.02, '27-Sep-2021', '07-May-2022', 'P');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (5, 5, 5, 7131.83, '07-Oct-2021', '22-Feb-2022', 'NP');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (6, 6, 6, 9105.58, '26-Dec-2020', '20-Sep-2022', 'NP');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (7, 7, 7, 6574.46, '06-Jan-2021', '25-Jun-2022', 'V');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (8, 8, 8, 9665.51, '18-Nov-2020', '16-Aug-2022', 'V');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (9, 9, 9, 9869.08, '15-Nov-2020', '18-Feb-2022', 'P');
+insert into Invoices (Invoice_ID, Supplier_ID, Department_ID, Total, Received_Date, Due_Date, Invoice_Status) values (10, 10, 10, 3178.45, '31-May-2021', '15-Aug-2022', 'NP');
+
+
+--Insert to Invoice Details
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (1, 1, 1);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (2, 2, 2);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (3, 3, 3);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (4, 4, 4);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (5, 5, 5);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (6, 6, 6);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (7, 7, 7);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (8, 8, 8);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (9, 9, 9);
+insert into Invoice_Details (Invoice_Details_ID, Invoice_ID, Product_ID) values (10, 10, 10);

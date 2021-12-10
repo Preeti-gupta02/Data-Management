@@ -1,0 +1,188 @@
+﻿--DDL For Patient Medication Management (Edited and Runs):
+ROLLBACK;
+commit;
+-- DDL For Medication Management App
+--Drop sequences and Tables
+DROP SEQUENCE patient_id_seq;
+DROP SEQUENCE pharmacy_id_seq;
+DROP SEQUENCE medications_id_seq;
+DROP SEQUENCE pharmacy_details_id_seq;
+DROP SEQUENCE insurance_provider_id_seq;
+DROP SEQUENCE insurance_details_id_seq;
+DROP SEQUENCE medication_details_id_seq;
+ 
+DROP TABLE Insurance_Details;
+DROP TABLE Medication_Details;
+DROP TABLE Pharmacy_Details;
+DROP TABLE Insurance_Providers;
+DROP TABLE Patients;
+DROP TABLE Pharmacies;
+DROP TABLE Medications;
+ 
+--Create Sequences 
+CREATE SEQUENCE patient_id_seq;
+CREATE SEQUENCE pharmacy_id_seq;
+CREATE SEQUENCE pharmacy_details_id_seq;
+CREATE SEQUENCE medications_id_seq;
+CREATE SEQUENCE insurance_provider_id_seq;
+CREATE SEQUENCE insurance_details_id_seq;
+CREATE SEQUENCE medication_details_id_seq;
+ 
+--Create Tables
+CREATE TABLE Pharmacies (
+    Pharmacy_ID NUMBER DEFAULT pharmacy_id_seq.NEXTVAL PRIMARY KEY,
+    Pharmacy_Name CHAR(50) NOT NULL,
+    Email VARCHAR (40) NOT NULL UNIQUE,
+    Phone CHAR(12) NOT NULL,
+    Street_Address VARCHAR(50) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    State CHAR(30) NOT NULL,
+    Zip CHAR(5) NOT NULL,
+    Notes VARCHAR(50)
+);
+ 
+CREATE TABLE Patients (
+    Patient_ID NUMBER DEFAULT patient_id_seq.NEXTVAL PRIMARY KEY,
+    Pharmacy_ID NUMBER REFERENCES Pharmacies (Pharmacy_ID),
+    First_Name VARCHAR(20) NOT NULL,
+    Last_Name VARCHAR(30) NOT NULL,
+    Email VARCHAR (40) NOT NULL UNIQUE,
+    Phone CHAR(12) NOT NULL,
+    Street_Address VARCHAR(50) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    State CHAR(30) NOT NULL,
+    Zip CHAR(5) NOT NULL,
+    Birthdate DATE
+);
+ 
+CREATE TABLE Insurance_Providers (
+    Insurance_ID NUMBER DEFAULT insurance_provider_id_seq.NEXTVAL PRIMARY KEY,
+    Provider_Name CHAR(40) NOT NULL,
+    Provider_Phone_Number NUMBER(12) NOT NULL
+);
+ 
+CREATE TABLE Insurance_Details (
+    Insurance_Details_ID NUMBER DEFAULT insurance_details_id_seq.NEXTVAL PRIMARY KEY,
+    Insurance_ID NUMBER REFERENCES Insurance_Providers (Insurance_ID),
+    Patient_ID NUMBER REFERENCES Patients (Patient_ID),
+    Group_Number NUMBER (8) NOT NULL,
+    Coverage_Date DATE NOT NULL,
+    Identification_Number VARCHAR(12) NOT NULL,
+    First_Name CHAR (20) NOT NULL,
+    Last_Name CHAR (20) NOT NULL
+);
+ 
+
+
+ 
+CREATE TABLE Pharmacy_Details (
+    Pharmacy_Details_ID NUMBER DEFAULT pharmacy_details_id_seq.NEXTVAL PRIMARY KEY,
+    Pharmacy_ID NUMBER REFERENCES Pharmacies (Pharmacy_ID),
+    Patient_ID NUMBER REFERENCES Patients (Patient_ID)
+);
+ 
+CREATE TABLE Medications (
+    Medication_ID NUMBER DEFAULT medications_id_seq.NEXTVAL PRIMARY KEY,
+    Medication_Name VARCHAR(75) NOT NULL
+);
+ 
+CREATE TABLE Medication_Details (
+    Medication_Details_ID NUMBER DEFAULT medication_details_id_seq.NEXTVAL PRIMARY KEY,
+    Patient_ID NUMBER REFERENCES Patients (Patient_ID),
+    Medication_ID NUMBER REFERENCES Medications (Medication_ID),
+    Dosage VARCHAR(50) NOT NULL,
+    Quantity NUMBER NOT NULL,
+    Number_Of_Refills NUMBER NOT NULL,
+    Notes VARCHAR(50)
+);
+
+
+--Insert Data
+--Pharmacy Data
+INSERT INTO Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (1, 'Willms-Becker', 'bhorley0@deviantart.com', '9125015597', '06 Bellgrove Circle', 'Savannah', 'Georgia', '31416', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (2, 'Crooks, Kutch and Kuhn', 'sridoutt1@umn.edu', '2022779454', '280 Redwing Point', 'Washington', 'District of Columbia', '20205', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (3, 'Zulauf, Vandervort and Dooley', 'lwarrier2@1und1.de', '3142140043', '2579 Carey Point', 'Saint Louis', 'Missouri', '63196', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (4, 'Gerhold LLC', 'fcollumbine3@usda.gov', '5595100100', '82408 Pleasure Crossing', 'Fresno', 'California', '93715', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (5, 'Botsford and Sons', 'adonaghy4@diigo.com', '7608699710', '7836 Buell Pass', 'Orange', 'California', '92668', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (6, 'Fahey, O''Kon and Johnston', 'abratten5@java.com', '2124415448', '85 Canary Drive', 'New York City', 'New York', '10039', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (7, 'Gerlach-Stamm', 'cspilling6@xrea.com', '5188952673', '28798 Debra Lane', 'Schenectady', 'New York', '12325', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (8, 'Lueilwitz Inc', 'mbusain7@godaddy.com', '9036539301', '0654 Lawn Place', 'Tyler', 'Texas', '75710', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (9, 'Langworth, Wilderman and Hegmann', 'kclearley8@archive.org', '9157433099', '7 Westerfield Place', 'El Paso', 'Texas', '88530', null);
+insert into Pharmacies (Pharmacy_ID, Pharmacy_Name, email, Phone, Street_Address, City, State, Zip, Notes) values (10, 'Wolff and Sons', 'dlush9@timesonline.co.uk', '6098155614', '678 Springs Trail', 'Trenton', 'New Jersey', '08603', null);
+
+
+--Patient Data
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (1, 1, 'Sonny', 'Dracksford', 'sdracksford0@nasa.gov', '2021724077', '52 Kim Park', 'Washington', 'District of Columbia', '20073', '19-Jul-2008');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (2, 2, 'Harlen', 'Kiellor', 'hkiellor1@mashable.com', '9415184795', '5 Upham Alley', 'Bradenton', 'Florida', '34282', '12-Mar-2012');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (3, 3, 'Grace', 'Kmicicki', 'gkmicicki2@clickbank.net', '3021898195', '829 Little Fleur Terrace', 'Wilmington', 'Delaware', '19810', '12-Sep-2002');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (4, 4, 'Rhianna', 'Laux', 'rlaux3@drupal.org', '5033524166', '228 Troy Pass', 'Salem', 'Oregon', '97306', '16-Nov-2001');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (5, 5, 'Edi', 'Cinelli', 'ecinelli4@ning.com', '6177235093', '8013 Acker Park', 'Cambridge', 'Massachusetts', '02142', '22-Aug-2005');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (6, 6, 'Rasia', 'Frisch', 'rfrisch5@prnewswire.com', '4075356904', '2 Cody Street', 'Orlando', 'Florida', '32813', '06-May-2006');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (7, 7, 'Petr', 'Casari', 'pcasari6@cmu.edu', '7121708144', '2 Johnson Center', 'Sioux City', 'Iowa', '51105', '15-Jan-1997');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (8, 8, 'Merola', 'Ricards', 'mricards7@cargocollective.com', '4028521750', '59781 Grayhawk Alley', 'Lincoln', 'Nebraska', '68517', '09-Mar-2014');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (9, 9, 'Valentin', 'Paulucci', 'vpaulucci8@weibo.com', '2815169207', '639 Golf Course Junction', 'Houston', 'Texas', '77050', '04-Feb-2010');
+insert into Patients (Patient_ID, Pharmacy_ID, First_Name, Last_Name, Email, Phone, Street_Address, City, State, Zip, Birthdate) values (10, 10, 'Giralda', 'Benez', 'gbenez9@bloglines.com', '5854217793', '68 Russell Way', 'Rochester', 'New York', '14609', '10-Feb-2008');
+ 
+--Insurance Providers 
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (1, 'Casper-Lemke', '2694952681');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (2, 'Durgan, Grant and Schulist', '2434642404');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (3, 'Pfeffer Inc', '8147465916');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (4, 'Lindgren Inc', '2837467320');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (5, 'Bergstrom, Schinner and Emard', '2715423059');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (6, 'Ferry, Goldner and Fadel', '3601212264');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (7, 'Pagac Group', '3692600773');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (8, 'Rippin, Will and Carroll', '3736998675');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (9, 'Mosciski-Stiedemann', '3061992817');
+insert into Insurance_Providers (Insurance_ID, Provider_Name, Provider_Phone_Number) values (10, 'Leuschke LLC', '8455990029');
+
+
+--Insurance Details 
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (1, 1, 1, 1415442, '12-Jun-2018', 'VQjfIHKZGaJ', 'Gertrude', 'Deek');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (2, 2, 2, 1986721, '13-Sep-2019', 'ncVuyMEy', 'Dante', 'Eydel');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (3, 3, 3, 1343412, '19-May-2022', 'KEvi46lIU9', 'Lindsey', 'Towler');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (4, 4, 4, 1133842, '01-Jul-2020', 'dp2a5Rcyo', 'Tommie', 'Touret');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (5, 5, 5, 1187626, '23-Apr-2011', 'POAyxaCI', 'Annadiane', 'Mityakov');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (6, 6, 6, 1421703, '03-Aug-2018', 'c20YEjtX', 'Mommy', 'Dullaghan');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (7, 7, 7, 1342114, '28-Jan-2015', 'i6zNh681SVia', 'Brad', 'Iffland');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (8, 8, 8, 1525102, '21-Jul-2022', 'kGapEg', 'Vivianna', 'Carr');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (9, 9, 9, 1084080, '29-Oct-2015', 'ISkp4jxq', 'Maximilian', 'Shrieve');
+insert into Insurance_Details (Insurance_Details_ID, Insurance_ID, Patient_ID, Group_Number, Coverage_Date, Identification_Number, First_Name, Last_Name) values (10, 10, 10, 1701087, '29-Nov-2014', 'lJeYzKVq', 'Dominique', 'Burdin');
+
+
+--Pharmacy Details
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (1, 1, 1);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (2, 2, 2);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (3, 3, 3);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (4, 4, 4);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (5, 5, 5);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (6, 6, 6);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (7, 7, 7);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (8, 8, 8);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (9, 9, 9);
+insert into Pharmacy_Details (Pharmacy_Details_ID, Pharmacy_ID, Patient_ID) values (10, 10, 10);
+
+
+--Medications
+insert into Medications (Medication_ID, Medication_Name) values (1, 'Senna Concentrate/Docusate Sodium');
+insert into Medications (Medication_ID, Medication_Name) values (2, 'Modafinil');
+insert into Medications (Medication_ID, Medication_Name) values (3, 'Ciprofloxacin Hydrochloride');
+insert into Medications (Medication_ID, Medication_Name) values (4, 'Trifluoperazine Hydrochloride');
+insert into Medications (Medication_ID, Medication_Name) values (5, 'Benzalkonium chloride');
+insert into Medications (Medication_ID, Medication_Name) values (6, 'Cephalexin');
+insert into Medications (Medication_ID, Medication_Name) values (7, 'avobenzone, homosalate, octisalate, oxybenzone, octocrylene');
+insert into Medications (Medication_ID, Medication_Name) values (8, 'Utah Juniper');
+insert into Medications (Medication_ID, Medication_Name) values (9, 'Amitriptyline Hydrochloride');
+insert into Medications (Medication_ID, Medication_Name) values (10, 'acetaminophen');
+
+
+--Medication Details
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (1, 1, 1, 'Once a day with food', 10, 10, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (2, 2, 2, 'Once a day with food', 15, 9, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (3, 3, 3, 'Twice a day. morning and evening', 49, 4, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (4, 4, 4, 'Two pills a day. Take at same time with food.', 50, 10, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (5, 5, 5, 'One pill a day, before bed.', 46, 12, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (6, 6, 6, 'Twice a day. morning and evening', 47, 11, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (7, 7, 7, 'Once a day with food', 21, 7, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (8, 8, 8, 'Once a day with food', 8, 3, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (9, 9, 9, 'Once a day 30 minutes before food', 46, 4, null);
+insert into Medication_Details (Medication_Details_ID, Patient_ID, Medication_ID, Dosage, Quantity, Number_Of_Refills, Notes) values (10, 10, 10, 'Twice a day, with food.', 27, 10, null);

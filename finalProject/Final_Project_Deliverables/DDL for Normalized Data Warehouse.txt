@@ -1,0 +1,172 @@
+﻿--DDL for the normalized data warehouse (Edited and Runs):
+--Drop Sequence
+DROP SEQUENCE patient_id_seq;
+DROP SEQUENCE pharmacy_id_seq;
+DROP SEQUENCE medications_id_seq;
+DROP SEQUENCE insurance_provider_id_seq;
+DROP SEQUENCE medication_details_id_seq;
+DROP SEQUENCE invoice_id_seq;
+DROP SEQUENCE department_id_seq;
+DROP SEQUENCE supplier_id_seq;
+DROP SEQUENCE invoice_details_id_seq;
+DROP SEQUENCE product_id_seq;
+DROP SEQUENCE doctor_id_seq;
+DROP SEQUENCE visit_id_seq;
+
+
+--Drop tables
+drop table Visits;
+drop table Doctors;
+DROP TABLE Invoice_Details;
+DROP TABLE Products;
+DROP TABLE Invoices;
+DROP TABLE Suppliers;
+DROP TABLE Departments;
+drop table Medication_Details;
+drop table pharmacies;
+drop table medications;
+drop table patients;
+drop table Insurance_providers;
+
+
+--Create Sequence
+CREATE SEQUENCE patient_id_seq;
+CREATE SEQUENCE pharmacy_id_seq;
+CREATE SEQUENCE medications_id_seq;
+CREATE SEQUENCE insurance_provider_id_seq;
+CREATE SEQUENCE medication_details_id_seq;
+CREATE SEQUENCE invoice_id_seq;
+CREATE SEQUENCE department_id_seq;
+CREATE SEQUENCE supplier_id_seq;
+CREATE SEQUENCE invoice_details_id_seq;
+CREATE SEQUENCE product_id_seq;
+CREATE SEQUENCE doctor_id_seq;
+CREATE SEQUENCE visit_id_seq;
+
+
+--Create Tables
+CREATE TABLE Pharmacies (
+    Pharmacy_ID NUMBER DEFAULT pharmacy_id_seq.NEXTVAL PRIMARY KEY,
+    Pharmacy_Name CHAR(50) NOT NULL,
+    Email VARCHAR (40) NOT NULL UNIQUE,
+    Phone CHAR(12) NOT NULL,
+    Street_Address VARCHAR(50) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    State CHAR(30) NOT NULL,
+    Zip CHAR(5) NOT NULL,
+    Notes VARCHAR(50)
+);
+
+
+CREATE TABLE Medications (
+    Medication_ID NUMBER DEFAULT medications_id_seq.NEXTVAL PRIMARY KEY,
+    Medication_Name VARCHAR(75) NOT NULL
+);
+
+
+CREATE TABLE Insurance_Providers (
+    Insurance_ID NUMBER DEFAULT insurance_provider_id_seq.NEXTVAL PRIMARY KEY,
+    Provider_Name CHAR(40) NOT NULL,
+    Provider_Phone_Number NUMBER(12) NOT NULL
+);
+
+
+CREATE TABLE Patients (
+    Patient_ID NUMBER DEFAULT patient_id_seq.NEXTVAL PRIMARY KEY,
+    Insurance_ID number REFERENCES Insurance_Providers (Insurance_ID),
+    First_Name VARCHAR(20) NOT NULL,
+    Last_Name VARCHAR(30) NOT NULL,
+    Email VARCHAR (40) NOT NULL UNIQUE,
+    Phone CHAR(12) NOT NULL,
+    Street_Address VARCHAR(50) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    State CHAR(30) NOT NULL,
+    Zip CHAR(5) NOT NULL,
+    Birthdate DATE,
+    Group_Number NUMBER (8) NOT NULL,
+    Coverage_Date DATE NOT NULL,
+    Insurance_Identification_Number VARCHAR(12) NOT NULL
+);
+
+
+
+
+CREATE TABLE Medication_Details (
+    Medication_Details_ID NUMBER DEFAULT medication_details_id_seq.NEXTVAL PRIMARY KEY,
+    Patient_ID NUMBER REFERENCES Patients (Patient_ID),
+    Medication_ID NUMBER REFERENCES Medications (Medication_ID),
+    Pharmacy_ID Number references Pharmacies (Pharmacy_ID),
+    Dosage VARCHAR(50) NOT NULL,
+    Quantity NUMBER NOT NULL,
+    Number_Of_Refills NUMBER NOT NULL,
+    Notes VARCHAR(50)
+);
+
+
+
+
+ 
+CREATE TABLE Suppliers (
+    Supplier_ID NUMBER DEFAULT supplier_id_seq.NEXTVAL PRIMARY KEY,
+    Supplier_Name CHAR(25) NOT NULL,
+    Street_Address VARCHAR(50) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    State CHAR(30) NOT NULL,
+    Zip CHAR(5) NOT NULL,
+    Phone CHAR(12) NOT NULL,
+    Supplier_Contact_Email CHAR(25) NOT NULL
+);
+ 
+CREATE TABLE Departments (
+    Department_ID NUMBER DEFAULT department_id_seq.NEXTVAL PRIMARY KEY,
+    Department_Name CHAR(25) NOT NULL
+);
+ 
+CREATE TABLE Products (
+    Product_ID NUMBER DEFAULT product_id_seq.NEXTVAL PRIMARY KEY,
+    Supplier_ID NUMBER REFERENCES Suppliers (Supplier_ID),
+    Product_Name VARCHAR(25) NOT NULL,
+    Inventory_Quantity NUMBER NOT NULL
+);
+ 
+CREATE TABLE Invoices (
+    Invoice_ID NUMBER default invoice_id_seq.NEXTVAL PRIMARY KEY,
+    Supplier_ID NUMBER REFERENCES Suppliers (Supplier_ID),
+    Department_ID NUMBER REFERENCES Departments (Department_ID),
+    Total NUMBER NOT NULL,
+    Received_Date DATE NOT NULL,
+    Due_Date DATE NOT NULL,
+    Invoice_Status CHAR(2) NOT NULL,
+    CONSTRAINT invoice_status_ck CHECK (Invoice_Status = 'P' OR Invoice_Status = 'NP' OR Invoice_Status ='V')
+);
+ 
+CREATE TABLE Invoice_Details (
+    Invoice_Details_ID NUMBER DEFAULT invoice_details_id_seq.NEXTVAL PRIMARY KEY,
+    Invoice_ID NUMBER REFERENCES Invoices (Invoice_ID),
+    Product_ID NUMBER REFERENCES Products (Product_ID)
+);
+
+
+CREATE TABLE Doctors (
+    Doctor_ID NUMBER DEFAULT doctor_id_seq.NEXTVAL PRIMARY KEY,
+    Department_ID number references Departments (Department_ID),
+    First_Name CHAR (20) NOT NULL,
+    Last_Name CHAR (20) NOT NULL,
+    Specialty CHAR(20) NOT NULL
+);
+ 
+CREATE TABLE Visits (
+    Visit_ID NUMBER DEFAULT visit_id_seq.NEXTVAL PRIMARY KEY,
+    Patient_ID NUMBER REFERENCES  Patients (Patient_ID),
+    Doctor_ID NUMBER REFERENCES Doctors (Doctor_ID),
+    Reason VARCHAR(200) NOT NULL,
+    Diagnosis VARCHAR(150) NOT NULL,
+    Follow_Up_Date DATE,
+    Bill_Total NUMBER NOT NULL,
+    Bill_Due_Date DATE NOT NULL,
+    Bill_Status CHAR(2) NOT NULL,
+    Room_Number Number (5), ---Assumption 1st Number in Room Number is the floor
+    CONSTRAINT bill_status_ck CHECK (Bill_Status = 'P' OR Bill_Status = 'NP' OR Bill_Status ='V')
+    
+);
+commit;
